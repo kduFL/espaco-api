@@ -32,17 +32,24 @@ app.get("/news", (req, res) => {
     .toArray()
     .then((results) => {
       console.log(results);
-      res.json(results)
+      res.json(results);
     });
 });
 
 app.post("/news", (req, res) => {
-  newsCollection
-    .insertOne(req.body)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((error) => console.error(error));
+  req = req.body;
+
+  if (req.title && req.content) {
+    newsCollection
+      .insertOne(req)
+      .then((result) => {
+        console.log(result);
+        res.json({ Status: 200 });
+      })
+      .catch((error) => console.error(error));
+  } else {
+    res.json({"Error": "Campos obrigatorios não inseridos"})
+  }
 });
 
 console.log("\nAPI rodando em http://localhost:3000/");
